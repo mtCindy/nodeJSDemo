@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="/socket.io/socket.io.js"></script>
+	<script type="text/javascript">
+		var socket = io.connect();
+		socket.on('setName', function(data, fn) {
+			console.log(data);
+			fn('lisi', 'wangwu');
+		});
+	</script>
+</head>
+<body>
+
+</body>
+</html>

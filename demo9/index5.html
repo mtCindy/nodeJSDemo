@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="/socket.io/socket.io.js"></script>
+	<script type="text/javascript">
+		var socket = io.connect();
+		socket.on('login', function(names) {
+			var str = '';
+			names.forEach(name => (str += name));
+			document.getElementById('result').innerHTML = str;
+		});
+		function add() {
+			socket.emit('login', document.getElementById('nickname').value);
+		}
+	</script>
+</head>
+<body>
+<input type="text" id="nickname" />
+<input type="button" onclick="add()" value="登陆" />
+<output id="result"></output>
+</body>
+</html>

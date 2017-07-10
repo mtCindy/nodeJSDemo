@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="/socket.io/socket.io.js"></script>
+	<script type="text/javascript">
+		var socket = io.connect();
+		function setNickName() {
+			socket.emit('set nickname', document.getElementById('nickname').value);
+		}
+		function getNickName() {
+			socket.emit('get nickname');
+		}
+		socket.on('send nickname', function(data) {
+			console.log('我的昵称为'+data)
+		});
+		socket.on('err', function(err) {
+			console.log('服务器出错'+err);
+		})
+	</script>
+</head>
+<body>
+昵称:<input type="text" id="nickname" />
+<input type="button" onclick="setNickName()" value="设置昵称" />
+<input type="button" onclick="getNickName()" value="获取昵称" />
+</body>
+</html>

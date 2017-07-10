@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>上传</title>
+		<script type="text/javascript">
+		    funtion test() {
+		    	var formData = new FormData();
+		    	var files = document.getElementById('file');
+		    	var file = files[0];
+		    	formData.append('myfile', file);
+		    	var xhr = new XMLHttpRequest();
+		    	xhr.open('POST', 'app6.html', true);
+		    	xhr.onload = function(e) {
+		    		if(e.status == 200) {
+		    			document.getElementById('result').innerHTML = this.response;
+		    		}
+		    	}
+		    	xhr.send(formData);
+		    }
+		</script>
+	</head>
+	<body>
+		<form id="form1" enctype="multipart/form-data">
+		请选择文件: <input type="file" id="file" name="file" />
+			<input type="button" value="上传文件" onclick={test()}>
+		</form>
+		<output id="result"></output>
+	</body>
+</html>
