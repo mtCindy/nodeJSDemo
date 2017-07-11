@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<!DOCTYPE html>
+<html>
+<head>
+	<title>编辑订单信息</title>
+</head>
+<script type="text/javascript">
+	function addOrder() {
+		var order_id = document.getElementById('order_id').value;
+		var order_date = document.getElementById('order_date').value;
+		var goods_id = document.getElementById('goods_id').value;
+		var goods_description = document.getElementById('goods_description').value;
+		var number = document.getElementById('number').value;
+		var xhr = new XMLHttpRequest();
+		xhr.open('POST', 'order_add.html', true);
+		xhr.onreadystatechange = function() {//Call a function when the state changes.
+			if(xhr.readyState == XMLHttpRequest.DONE && xhr.status == 200) {
+
+			}
+		}
+		xhr.send(JSON.stringify({
+			order_id,
+			order_date,
+			goods_id,
+			goods_description,
+			number
+		}));
+	}
+	function showOrderList() {
+		window.location = '/order_list.html';
+	}
+</script>
+<body>
+<div id="main">
+<table>
+	<tr>
+		<td>订单编号: <input type="text" name="order_id" id="order_id" /></td>
+		<td>订单日期: <input type="text" name="order_date" id="order_date" /></td>
+		<td>商品编号<input type="text" name="goods_id" id="goods_id" /></td>
+	</tr>
+	<tr>
+		<td>商品描述: <input type="text" name="goods_description" id="goods_description" /></td>
+		<td>商品数量: <input type="text" name="number" id="number" /></td>
+		<td></td>
+	</tr>
+</table>
+<div>
+<button onclick="addOrder()">添加</button>
+<button onclick="showOrderList()">进入列表页</button>
+</div>
+</div>
+</body>
+</html>
