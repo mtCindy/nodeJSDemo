@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<!DOCTYPE html>
+<html>
+<head>
+	<title>用node.js实现一个聊天室</title>
+	<style type="text/css">
+	    #main {
+			width: 1200px;
+			height: 800px;
+			background-color: #ddd;
+			margin: 0 auto;
+		}
+		#info {
+			text-align: center;
+			color: blue;
+		}
+		#top {
+			width: 1200px;
+			height: 50px;
+			border-top: 1px solid #eee;
+			border-bottom: 1px solid #eee;
+		}
+		#top-content {
+			padding-top: 10px;
+			padding-left: 20px;
+		}
+		#middle {
+			width: 1200px;
+			height: 400px;
+			border-bottom: 1px solid #eee;
+		}
+		#left {
+			width: 890px;
+			height: 400px;
+			display: inline-block;
+			border-right: 1px solid #eee;
+			float: left;
+		}
+		#right {
+			width: 300px;
+			height: 400px;
+			display: inline-block;
+			float: right;
+		}
+		#bottom-content {
+			padding-top: 20px;
+			padding-left: 20px;
+		}
+	</style>
+	<script src="/socket.io/socket.io.js"></script>
+	<script type="text/javascript">
+	    var userName, userNameInput, socket;
+	    function window_onload() {
+	    	userNameInput = document.getElementById('loginname');
+	    	userNameInput.focus();
+	    }
+
+	    function login() {
+	    	userName = userNameInput.value.trim();
+	    	if(userName == '') {
+	    		alert('请输入用户名');
+	    		return;
+	    	}
+			socket = io.connect();
+			var msg = '';
+			socket.on('login', function(data) {
+				var str = '';
+				data.names.forEach(name => (str += `<p>${name}<p>`));
+				document.getElementById('userList').innerHTML = str;
+				msg += `<p>欢迎${data.name}进入聊天室</p>`;
+				document.getElementById('messageList').innerHTML = msg;
+			});
+			socket.on('duplicate', function() {
+				alert('该用户已被使用');
+			});
+			socket.on('send userlist', function(names) {
+				console.log(names);
+				var str = '';
+				names.forEach(name => (str += `<p>${name}<p>`));
+				document.getElementById('userList').innerHTML = str;
+			});
+			socket.on('send message', function(data) {
+				msg += `<p>${data.userName}说:${data.message}</p>`;
+				document.getElementById('messageList').innerHTML = msg;
+			});
+			socket.on('logout', function(data) {
+				msg += `<p>${data}退出聊天室</p>`;
+				document.getElementById('messageList').innerHTML = msg;
+			});
+			socket.emit('login', document.getElementById('loginname').value);
+		}
+		
+		function logout() {
+			socket.emit('logout', userName);
+		}
+		function sendMessage() {
+			socket.emit('send message', {message: document.getElementById('message').value, userName});
+		}
+		function window_onunload() {
+			socket.emit('logout', userName);
+			socket.disconnect();
+		}
+	</script>
+</head>
+<body onload="window_onload()" onunload="window_onunload()">
+<div id="main">
+    <div id="info">
+    	<h1>欢迎进入聊天室</h1>
+    </div>
+	<div id="top">
+	    <div id="top-content">
+	    	<input type="text" name="loginname" id="loginname" />
+			<input type="button" id="loginbutton" onclick="login()" value="登录" />
+			<input type="button" onclick="logout()" value="退出" />
+	    </div>
+	</div>
+	<div id="middle">
+		<div id="left">
+			<output id="messageList"></output>
+		</div>
+		<div id="right">
+			<p>当前登录用户:</p>
+			<output id="userList"></output>
+		</div>
+	</div>
+	<div id="bottom">
+	    <div id="bottom-content">
+	    	<textarea rows="8" cols="70" id="message"></textarea>
+	    	<input type="button" onclick="sendMessage()" value="发送" />
+	    </div>
+	</div>
+</div>
+</body>
+</html>
